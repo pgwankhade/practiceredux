@@ -1,25 +1,47 @@
-import logo from './logo.svg';
+import { useEffect, useState } from "react";
+import { connect } from "react-redux";
 import './App.css';
+import { onNameChange , requestRobots} from "./redux/action";
 
-function App() {
+
+const mapStateToProps= state =>{
+  return{
+    namefield: state.changename.namefield,
+    robots: state.requestRobots.robots,
+    isPending: state.requestRobots.isPending
+  }
+}
+
+const mapDispatchToProps =(dispatch)=>{
+  return{
+    onNameChange:(event)=> dispatch(onNameChange(event.target.value)),
+    onRequestRobots: () => dispatch(requestRobots())
+  }
+ 
+}
+
+function App(props) {
+
+  useEffect(()=>{
+     props.onRequestRobots()
+  },[])
+
+  const users= props.robots
+  console.log(users)
+
+  // const[name,setName]= useState()
+
+  // const onNameChange=(e)=>{
+  //   setName(e.target.value)
+
   return (
+    
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <input onChange={props.onNameChange}></input>
+     <h1>hello{props.namefield}</h1>
     </div>
+
   );
 }
 
-export default App;
+export default  connect(mapStateToProps, mapDispatchToProps)(App);
